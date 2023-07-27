@@ -1,0 +1,23 @@
+{
+  "name": "tooo",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "start": "turbo run start",
+    "build": "turbo run build",
+    "test": "turbo run test"
+  },
+  "keywords": [
+    "ecommerce",
+    "marketplace",
+    "shop"
+  ],
+  "author": "Nyoman Sunima <nyomansunima@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "turbo": "^1.10.12"
+  }
+}
