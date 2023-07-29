@@ -11,5 +11,7 @@ export class GoogleAuthInput {
 }
 
 export class GithubAuthInput {
+  @IsNotEmpty()
+  @IsString()
   accessToken: string
 }

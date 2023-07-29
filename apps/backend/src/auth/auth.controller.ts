@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common'
 import { AuthService } from './auth.service'
-import { GoogleAuthInput } from './model/auth.input'
+import { GithubAuthInput, GoogleAuthInput } from './model/auth.input'
 import { AuthData } from './model/auth.payload'
 import { Public } from './decorator/public.decorator'
 
@@ -12,5 +12,11 @@ export class AuthController {
   @Post('/google')
   async authWithGoogle(@Body() input: GoogleAuthInput): Promise<AuthData> {
     return this.authService.authWithGoogle(input)
+  }
+
+  @Public()
+  @Post('/github')
+  async authWithGithub(@Body() input: GithubAuthInput): Promise<AuthData> {
+    return this.authService.authWithGithub(input)
   }
 }

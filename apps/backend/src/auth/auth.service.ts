@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { UserService } from '~/user/user.service'
-import { GoogleAuthInput } from './model/auth.input'
+import { GithubAuthInput, GoogleAuthInput } from './model/auth.input'
 import { AuthData } from './model/auth.payload'
 import { OAuthService } from './oauth.service'
 import { JwtService } from '@nestjs/jwt'
@@ -42,6 +42,14 @@ export class AuthService {
   async authWithGoogle(input: GoogleAuthInput): Promise<AuthData> {
     const googleUser = await this.oAuthService.retrieveGoogleUser(input)
     const user = await this.userService.signUserWithGoogle(googleUser)
+    const token = await this.generateToken(user)
+
+    return token
+  }
+
+  async authWithGithub(input: GithubAuthInput): Promise<AuthData> {
+    const githubUser = await this.oAuthService.retrieveGithubUser(input)
+    const user = await this.userService.signUserWithGithub(githubUser)
     const token = await this.generateToken(user)
 
     return token

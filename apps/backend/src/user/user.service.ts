@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { GoogleOAuthData } from '~/auth/model/auth.payload'
+import { GithubOAuthData, GoogleOAuthData } from '~/auth/model/auth.payload'
 import { PrismaService } from '~/config/prisma.service'
 import { User, UserProvider, Prisma } from '@prisma/client'
 
@@ -59,6 +59,27 @@ export class UserService {
         fullName: input.name,
         providers: ['GOOGLE'],
         role: 'USER',
+      }
+      currentUser = await this.createNewUser(createUserInput)
+    }
+
+    return currentUser
+  }
+
+  async signUserWithGithub(input: GithubOAuthData): Promise<User> {
+    let currentUser = await this.findUserByEmail(input.email)
+    if (currentUser) {
+      currentUser = await this.assignNewProvider(currentUser, 'GITHUB')
+    }
+    if (!currentUser) {
+      const createUserInput: Prisma.UserCreateInput = {
+        email: input.email,
+        username: this.createUsernameFromEmail(input.email),
+        avatar: input.avatar_url,
+        fullName: input.name,
+        providers: ['GOOGLE'],
+        role: 'USER',
+        address: input.location,
       }
       currentUser = await this.createNewUser(createUserInput)
     }
