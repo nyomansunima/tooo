@@ -3,6 +3,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Manrope } from 'next/font/google'
 import { QueryProvider } from '@components/common/query-provider'
+import { AuthProvider } from '@components/common/auth-provider'
 
 const manrope = Manrope({ subsets: ['latin'] })
 
@@ -19,10 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${manrope.className} bg-white text-base leading-relaxed font-semibold text-black`}
+        className={`${manrope.className} bg-white text-base leading-relaxed font-semibold text-black dark:bg-black dark:text-neutral-100`}
       >
-        <ThemeProvider attribute="theme" enableSystem defaultTheme="light">
-          <QueryProvider>{children}</QueryProvider>
+        <ThemeProvider attribute="class" enableSystem defaultTheme="dark">
+          <AuthProvider>
+            <QueryProvider>{children}</QueryProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
