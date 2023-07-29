@@ -9,5 +9,5 @@
 /* presets */
 
 .fi {
-  @apply flex justify-center items-center;
+  @apply flex justify-center items-center text-xl;
 }
