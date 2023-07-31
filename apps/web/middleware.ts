@@ -1,13 +1,18 @@
-import { withAuth } from 'next-auth/middleware'
-import { NextResponse } from 'next/server'
+import { getToken } from 'next-auth/jwt'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * Middleware to maintain the
  * state of the app, include adding the guard
  * for some routes
  */
-export default withAuth(function middleware(request) {
-  const token = request.nextauth.token
+export default async function middleware(request: NextRequest) {
+  // define the token that we get form teh next auth
+  // then use to secure some path and routes
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  })
   const pathname = request.nextUrl.pathname
 
   // secure the login page
@@ -16,7 +21,7 @@ export default withAuth(function middleware(request) {
   }
 
   return NextResponse.next()
-}, {})
+}
 
 export const config = {
   matcher: ['/signin/:path*'],
