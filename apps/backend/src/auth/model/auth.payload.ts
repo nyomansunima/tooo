@@ -1,6 +1,8 @@
 export class AuthData {
   accessToken: string
   refreshToken: string
+  iat: number
+  exp: number
 }
 
 export class GoogleOAuthData {
