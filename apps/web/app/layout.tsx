@@ -22,7 +22,7 @@ export default function RootLayout({
       <body
         className={`${manrope.className} bg-white text-base leading-relaxed font-semibold text-black dark:bg-black dark:text-neutral-100`}
       >
-        <ThemeProvider attribute="class" enableSystem defaultTheme="dark">
+        <ThemeProvider attribute="class" enableSystem defaultTheme="light">
           <AuthProvider>
             <QueryProvider>{children}</QueryProvider>
           </AuthProvider>
