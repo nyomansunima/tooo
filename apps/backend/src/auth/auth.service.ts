@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { UserService } from '~/user/user.service'
 import { GithubAuthInput, GoogleAuthInput } from './model/auth.input'
 import { AuthData } from './model/auth.payload'
@@ -16,7 +16,11 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
+  logger = new Logger(AuthService.name)
+
   async generateToken(user: User): Promise<AuthData> {
+    this.logger.log('Create Access and Refresh Token')
+
     const payload = {
       sub: user.id,
       email: user.email,
@@ -36,21 +40,38 @@ export class AuthService {
       expiresIn: refreshTokenExpiration,
     })
 
-    return { accessToken, refreshToken }
+    const decodedAccessToken = await this.jwtService.decode(accessToken, {
+      json: true,
+    })
+
+    return {
+      accessToken,
+      refreshToken,
+      iat: decodedAccessToken['iat'],
+      exp: decodedAccessToken['exp'],
+    }
   }
 
   async authWithGoogle(input: GoogleAuthInput): Promise<AuthData> {
+    this.logger.log('Auth with google')
+
     const googleUser = await this.oAuthService.retrieveGoogleUser(input)
     const user = await this.userService.signUserWithGoogle(googleUser)
     const token = await this.generateToken(user)
+
+    this.logger.log('Auth completed')
 
     return token
   }
 
   async authWithGithub(input: GithubAuthInput): Promise<AuthData> {
+    this.logger.log('Auth with github')
+
     const githubUser = await this.oAuthService.retrieveGithubUser(input)
     const user = await this.userService.signUserWithGithub(githubUser)
     const token = await this.generateToken(user)
+
+    this.logger.log('Auth completed')
 
     return token
   }
