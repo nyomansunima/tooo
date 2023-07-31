@@ -33,6 +33,8 @@ const authOptions: NextAuthOptions = {
 
         user.accessToken = res.accessToken
         user.refreshToken = res.refreshToken
+        user.issueAt = res.iat
+        user.expiredAt = res.exp
         return true
       }
 
@@ -44,6 +46,8 @@ const authOptions: NextAuthOptions = {
 
         user.accessToken = res.accessToken
         user.refreshToken = res.refreshToken
+        user.issueAt = res.iat
+        user.expiredAt = res.exp
         return true
       }
       return false
@@ -52,11 +56,19 @@ const authOptions: NextAuthOptions = {
       if (user) {
         token.accessToken = user.accessToken
         token.refreshToken = user.refreshToken
+        token.issueAt = user.issueAt
+        token.expiredAt = user.expiredAt
       }
 
       return token
     },
     session: async ({ session, token }) => {
+      // check if the access Token stil valid
+      // then refresh it when needed
+      if (token.issueAt * 1000 < Date.now()) {
+      }
+
+      // get the user info from the access token
       const user = await useApiConnection<any>('/user', {
         headers: {
           Authorization: `Bearer ${token.accessToken}`,
@@ -64,6 +76,8 @@ const authOptions: NextAuthOptions = {
       })
       session.accessToken = token.accessToken
       session.refreshToken = token.refreshToken
+      session.issueAt = token.issueAt
+      session.expiredAt = token.expiredAt
       session.user = user
 
       return session
