@@ -59,6 +59,7 @@ export class UserService {
         fullName: input.name,
         providers: ['GOOGLE'],
         role: 'USER',
+        isVerified: false,
       }
       currentUser = await this.createNewUser(createUserInput)
     }
@@ -77,9 +78,10 @@ export class UserService {
         username: this.createUsernameFromEmail(input.email),
         avatar: input.avatar_url,
         fullName: input.name,
-        providers: ['GOOGLE'],
+        providers: ['GITHUB'],
         role: 'USER',
         address: input.location,
+        isVerified: false,
       }
       currentUser = await this.createNewUser(createUserInput)
     }
